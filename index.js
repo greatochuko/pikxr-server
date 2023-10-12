@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import authRouter from "./routes/authRoutes.js";
 import userRouter from "./routes/userRoutes.js";
+import postRouter from "./routes/postRoutes.js";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(authRouter);
 app.use(userRouter);
+app.use(postRouter);
 
 mongoose.connect("mongodb://127.0.0.1:27017/pikxrDB").then(
   app.listen(PORT, () => {
