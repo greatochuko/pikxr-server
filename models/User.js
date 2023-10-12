@@ -21,6 +21,13 @@ const UserSchema = new mongoose.Schema(
       type: String,
       minlength: [6, "Password must be greater than 6 characters"],
     },
+    followers: { type: Number },
+    following: { type: Number },
+    posts: { type: Number },
+    about: {
+      bio: { type: String },
+      dob: { type: String },
+    },
   },
   { timestamps: true }
 );
