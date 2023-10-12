@@ -7,9 +7,9 @@ export async function login(req, res) {
   const user = await User.findOne({ email: email });
   if (user) {
     if (bcrypt.compare(password, user.password)) {
-      const { name } = user;
+      const { name, username } = user;
       const token = generateJwt(user._id);
-      res.json({ name, token });
+      res.json({ fullname, email, username, token });
     } else {
       res.json({ error: "incorect password" });
     }

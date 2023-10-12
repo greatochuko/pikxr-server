@@ -3,7 +3,13 @@ import validator from "validator";
 
 const UserSchema = new mongoose.Schema(
   {
-    name: { type: String, required: [true, "Please enter your name"] },
+    fullname: { type: String, required: [true, "Please enter your fullname"] },
+    userName: {
+      type: String,
+      required: [true, "Please enter a username"],
+      unique: [true, "Username already taken"],
+      lowercase: true,
+    },
     email: {
       type: String,
       unique: [true, "User alread exists"],
