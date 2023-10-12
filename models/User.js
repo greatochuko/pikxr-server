@@ -25,10 +25,4 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Hash password before saving user
-UserSchema.pre("save", function (next) {
-  console.log(this);
-  next();
-});
-
 export const User = mongoose.model("user", UserSchema);
