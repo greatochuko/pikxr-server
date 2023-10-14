@@ -4,7 +4,7 @@ import validator from "validator";
 const UserSchema = new mongoose.Schema(
   {
     fullname: { type: String, required: [true, "Please enter your fullname"] },
-    userName: {
+    username: {
       type: String,
       required: [true, "Please enter a username"],
       unique: [true, "Username already taken"],
@@ -21,9 +21,9 @@ const UserSchema = new mongoose.Schema(
       type: String,
       minlength: [6, "Password must be greater than 6 characters"],
     },
-    followers: { type: Number },
-    following: { type: Number },
-    posts: { type: Number },
+    followers: { type: Number, default: 0 },
+    following: { type: Number, default: 0 },
+    posts: { type: Number, default: 0 },
     about: {
       bio: { type: String },
       dob: { type: String },

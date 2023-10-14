@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 var whitelist = ["http://localhost:5173"];
 var corsOptions = {
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || undefined) {
+    if (whitelist.includes(origin) || origin === undefined) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));

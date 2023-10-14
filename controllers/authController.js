@@ -19,19 +19,29 @@ export async function login(req, res) {
 }
 
 export async function signup(req, res) {
-  const { username, fullName, email, password } = req.body;
+  const { username, fullname, email, password } = req.body;
 
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  const user = await User.create({
+    username,
+    fullname,
+    email,
+    password: hashedPassword,
+  });
   try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const user = await User.create({
-      username,
-      fullName,
-      email,
-      password: hashedPassword,
-    });
     const token = generateJwt(user._id);
-    res.status(201).json({ fullName, email, username, token });
+    res.status(201).json({
+      user: {
+        id: user._id,
+        fullname: user.fullname,
+        username: user.username,
+        followers: user.followers,
+        followers: user.followers,
+        posts: user.posts,
+      },
+      token,
+    });
   } catch (err) {
     res.status(400).json(err.message);
   }
