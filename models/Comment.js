@@ -2,9 +2,9 @@ import mongoose, { Schema } from "mongoose";
 
 const commentSchema = new Schema(
   {
-    postId: { type: Schema.Types.ObjectId, required: true },
     comment: { type: String, required: true },
-    userId: { type: Schema.Types.ObjectId, required: true },
+    postId: { type: Schema.Types.ObjectId, required: true, ref: "post" },
+    user: { type: Schema.Types.ObjectId, required: true, ref: "user" },
   },
   { timestamps: true }
 );
