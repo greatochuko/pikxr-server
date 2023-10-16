@@ -1,10 +1,12 @@
 import { Post } from "../models/Post.js";
 
 export async function getPosts(req, res) {
-  const posts = await Post.find().populate({
-    path: "creator",
-    select: "username imgUrl",
-  });
+  const posts = await Post.find()
+    .populate({
+      path: "creator",
+      select: "username imgUrl",
+    })
+    .sort({ createdAt: -1 });
   res.json(posts);
 }
 
