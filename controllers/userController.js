@@ -1,7 +1,8 @@
 import { User } from "../models/User.js";
 
 export async function getUser(req, res) {
-  res.json(req.user || "unable to get user");
+  const user = await User.findById(req.params.id).select("-password");
+  res.json(user);
 }
 
 export async function validateEmail(req, res) {

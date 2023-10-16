@@ -4,7 +4,7 @@ const PostSchema = new mongoose.Schema(
   {
     caption: { type: String, required: [true, "Please enter a caption"] },
     imageUrl: { type: String },
-    creatorId: { type: mongoose.Schema.ObjectId },
+    creator: { type: mongoose.Schema.ObjectId, required: true, ref: "user" },
     likes: { type: Number, default: 0 },
     coments: { type: Number, default: 0 },
     saves: { type: Number, default: 0 },
