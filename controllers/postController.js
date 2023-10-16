@@ -6,6 +6,10 @@ export async function getPosts(req, res) {
 }
 
 export async function createPost(req, res) {
-  const post = await Post.create(req.body);
-  res.json(post);
+  const newPost = await Post.create({
+    caption: req.body.caption,
+    imageUrl: req.file.filename,
+  });
+
+  res.json(newPost);
 }
