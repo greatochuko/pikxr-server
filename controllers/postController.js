@@ -4,7 +4,7 @@ export async function getPosts(req, res) {
   const posts = await Post.find()
     .populate({
       path: "creator",
-      select: "username imgUrl",
+      select: "username imgUrl fullname",
     })
     .sort({ createdAt: -1 });
   res.json(posts);
