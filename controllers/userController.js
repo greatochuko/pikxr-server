@@ -1,8 +1,12 @@
 import { User } from "../models/User.js";
 
 export async function getUser(req, res) {
-  const user = await User.findById(req.params.id).select("-password");
-  res.json(user);
+  if (req.userId) {
+    const user = await User.findById(req.userId).select("-password");
+    res.json(user);
+  } else {
+    res.json({ error: "invalid token" });
+  }
 }
 
 export async function validateEmail(req, res) {
