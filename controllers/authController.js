@@ -3,13 +3,13 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 export async function login(req, res) {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email: email });
+  const { email, username, password } = req.body;
+  const user =
+    (await User.findOne({ email })) || (await User.findOne({ username }));
   if (user) {
     if (bcrypt.compare(password, user.password)) {
-      const { fullName, username, email } = user;
       const token = generateJwt(user._id);
-      res.json({ fullName, email, username, token });
+      res.json({ token });
     } else {
       res.json({ error: "incorect password" });
     }
