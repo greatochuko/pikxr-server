@@ -9,7 +9,7 @@ export async function getComments(req, res) {
 }
 
 export async function postComment(req, res) {
-  const { comment, userId: user, postId } = req.body;
+  const { comment, user, postId } = req.body;
   await Comment.create({ comment, user, postId });
   const comments = await Comment.find({ postId }).populate({
     path: "user",
