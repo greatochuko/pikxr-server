@@ -29,9 +29,30 @@ export async function likePost(req, res) {
       $inc: { likes: 1 },
     },
     { new: true }
-  );
-  const user = await User.findByIdAndUpdate(userId, {
+  ).populate({
+    path: "creator",
+    select: "username imgUrl fullname",
+  });
+  await User.findByIdAndUpdate(userId, {
     $push: { likedPosts: postId },
+  });
+  res.json(post);
+}
+
+export async function unLikePost(req, res) {
+  const { postId, userId } = req.body;
+  const post = await Post.findByIdAndUpdate(
+    postId,
+    {
+      $inc: { likes: -1 },
+    },
+    { new: true }
+  ).populate({
+    path: "creator",
+    select: "username imgUrl fullname",
+  });
+  await User.findByIdAndUpdate(userId, {
+    $pull: { likedPosts: postId },
   });
   res.json(post);
 }
