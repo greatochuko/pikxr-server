@@ -1,4 +1,5 @@
 import { Post } from "../models/Post.js";
+import { User } from "../models/User.js";
 
 export async function getPosts(req, res) {
   const posts = await Post.find()
@@ -18,4 +19,19 @@ export async function createPost(req, res) {
   });
 
   res.json(newPost);
+}
+
+export async function likePost(req, res) {
+  const { postId, userId } = req.body;
+  const post = await Post.findByIdAndUpdate(
+    postId,
+    {
+      $inc: { likes: 1 },
+    },
+    { new: true }
+  );
+  const user = await User.findByIdAndUpdate(userId, {
+    $push: { likedPosts: postId },
+  });
+  res.json(post);
 }

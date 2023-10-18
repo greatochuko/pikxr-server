@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { createPost, getPosts } from "../controllers/postController.js";
+import {
+  createPost,
+  getPosts,
+  likePost,
+} from "../controllers/postController.js";
 import multer from "multer";
 
 const storage = multer.diskStorage({
@@ -32,5 +36,7 @@ const postRouter = Router();
 postRouter.get("/posts/", getPosts);
 
 postRouter.post("/posts", upload.single("image"), createPost);
+
+postRouter.post("/post/like", likePost);
 
 export default postRouter;
