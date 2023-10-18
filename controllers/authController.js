@@ -11,10 +11,10 @@ export async function login(req, res) {
       const token = generateJwt(user._id);
       res.json({ token });
     } else {
-      res.json({ error: "incorect password" });
+      res.json({ error: "Username or Password incorrect" });
     }
   } else {
-    res.json({ error: "user does not exist" });
+    res.json({ error: "Username or Password incorrect" });
   }
 }
 
@@ -32,14 +32,6 @@ export async function signup(req, res) {
   try {
     const token = generateJwt(user._id);
     res.status(201).json({
-      user: {
-        id: user._id,
-        fullname: user.fullname,
-        username: user.username,
-        followers: user.followers,
-        followers: user.followers,
-        posts: user.posts,
-      },
       token,
     });
   } catch (err) {
