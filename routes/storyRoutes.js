@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { getStories, postStory } from "../controllers/storyController.js";
+import { createStory, getStories } from "../controllers/storyController.js";
 
 const storyRouter = Router();
 
 storyRouter.get("/stories", getStories);
-storyRouter.post("/story", postStory);
+storyRouter.post("/story/new", createStory);
 
 export default storyRouter;

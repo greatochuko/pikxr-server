@@ -1,5 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
+import fileUpload from "express-fileupload";
+
 import authRouter from "./routes/authRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import postRouter from "./routes/postRoutes.js";
@@ -7,6 +9,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import commentRouter from "./routes/commentRoutes.js";
 import storyRouter from "./routes/storyRoutes.js";
+
 dotenv.config();
 
 const app = express();
@@ -26,6 +29,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static("public"));
+app.use(fileUpload());
 app.use(authRouter);
 app.use(userRouter);
 app.use(postRouter);
