@@ -2,8 +2,8 @@ import { Story } from "../models/Story.js";
 
 export async function getStories(req, res) {
   const stories = await Story.find().populate({
-    path: "user",
-    select: "username imgUrl fullname",
+    path: "creator",
+    select: "username imageUrl fullname",
   });
   res.json(stories);
 }

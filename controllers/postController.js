@@ -5,7 +5,7 @@ export async function getPosts(req, res) {
   const posts = await Post.find()
     .populate({
       path: "creator",
-      select: "username imgUrl fullname",
+      select: "username imageUrl fullname",
     })
     .sort({ createdAt: -1 });
   res.json(posts);
@@ -31,7 +31,7 @@ export async function likePost(req, res) {
     { new: true }
   ).populate({
     path: "creator",
-    select: "username imgUrl fullname",
+    select: "username imageUrl fullname",
   });
   await User.findByIdAndUpdate(userId, {
     $push: { likedPosts: postId },
@@ -49,7 +49,7 @@ export async function unLikePost(req, res) {
     { new: true }
   ).populate({
     path: "creator",
-    select: "username imgUrl fullname",
+    select: "username imageUrl fullname",
   });
   await User.findByIdAndUpdate(userId, {
     $pull: { likedPosts: postId },
@@ -67,7 +67,7 @@ export async function savePost(req, res) {
     { new: true }
   ).populate({
     path: "creator",
-    select: "username imgUrl fullname",
+    select: "username imageUrl fullname",
   });
   await User.findByIdAndUpdate(userId, {
     $push: { savedPosts: postId },
@@ -85,7 +85,7 @@ export async function unSavePost(req, res) {
     { new: true }
   ).populate({
     path: "creator",
-    select: "username imgUrl fullname",
+    select: "username imageUrl fullname",
   });
   await User.findByIdAndUpdate(userId, {
     $pull: { savedPosts: postId },
