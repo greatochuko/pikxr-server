@@ -56,3 +56,39 @@ export async function unLikePost(req, res) {
   });
   res.json(post);
 }
+
+export async function savePost(req, res) {
+  const { postId, userId } = req.body;
+  const post = await Post.findByIdAndUpdate(
+    postId,
+    {
+      $inc: { saves: 1 },
+    },
+    { new: true }
+  ).populate({
+    path: "creator",
+    select: "username imgUrl fullname",
+  });
+  await User.findByIdAndUpdate(userId, {
+    $push: { savedPosts: postId },
+  });
+  res.json(post);
+}
+
+export async function unSavePost(req, res) {
+  const { postId, userId } = req.body;
+  const post = await Post.findByIdAndUpdate(
+    postId,
+    {
+      $inc: { saves: -1 },
+    },
+    { new: true }
+  ).populate({
+    path: "creator",
+    select: "username imgUrl fullname",
+  });
+  await User.findByIdAndUpdate(userId, {
+    $pull: { savedPosts: postId },
+  });
+  res.json(post);
+}

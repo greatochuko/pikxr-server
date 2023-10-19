@@ -25,6 +25,7 @@ const UserSchema = new mongoose.Schema(
     followers: { type: Number, default: 0 },
     following: { type: Number, default: 0 },
     likedPosts: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
+    savedPosts: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
     posts: { type: Number, default: 0 },
     about: {
       bio: { type: String },

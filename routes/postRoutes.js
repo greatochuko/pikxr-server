@@ -4,6 +4,8 @@ import {
   getPosts,
   likePost,
   unLikePost,
+  savePost,
+  unSavePost,
 } from "../controllers/postController.js";
 import multer from "multer";
 
@@ -41,5 +43,9 @@ postRouter.post("/posts", upload.single("image"), createPost);
 postRouter.post("/post/like", likePost);
 
 postRouter.post("/post/unlike", unLikePost);
+
+postRouter.post("/post/save", savePost);
+
+postRouter.post("/post/unsave", unSavePost);
 
 export default postRouter;
