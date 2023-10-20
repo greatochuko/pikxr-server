@@ -20,3 +20,12 @@ export async function validateUsername(req, res) {
   const user = await User.find({ username });
   res.json({ userExists: user.length ? true : false });
 }
+
+export async function searchUsers(req, res) {
+  const { q } = req.query;
+  const users = await User.find().select("username fullname imageUrl ");
+  const searchedUsers = users.filter(
+    (u) => u.username.includes(q) || u.fullname.includes(q)
+  );
+  res.json(searchedUsers);
+}
