@@ -7,6 +7,10 @@ export async function getPosts(req, res) {
       path: "creator",
       select: "username imageUrl fullname",
     })
+    .populate({
+      path: "comments",
+      populate: { path: "user", select: "username imageUrl fullname" },
+    })
     .sort({ createdAt: -1 });
   res.json(posts);
 }
@@ -22,11 +26,20 @@ export function createPost(req, res) {
       res.json({ error: err.message });
       return;
     }
-    const newPost = await Post.create({
+    const newPostCreated = await Post.create({
       caption: req.body.caption,
       creator: req.body.creator,
       imageUrl: fileName,
     });
+    const newPost = await Post.findById(newPostCreated._id)
+      .populate({
+        path: "creator",
+        select: "username imageUrl fullname",
+      })
+      .populate({
+        path: "comments",
+        populate: { path: "user", select: "username imageUrl fullname" },
+      });
 
     res.json(newPost);
   });
@@ -40,10 +53,15 @@ export async function likePost(req, res) {
       $inc: { likes: 1 },
     },
     { new: true }
-  ).populate({
-    path: "creator",
-    select: "username imageUrl fullname",
-  });
+  )
+    .populate({
+      path: "creator",
+      select: "username imageUrl fullname",
+    })
+    .populate({
+      path: "comments",
+      populate: { path: "user", select: "username imageUrl fullname" },
+    });
   await User.findByIdAndUpdate(userId, {
     $push: { likedPosts: postId },
   });
@@ -58,10 +76,15 @@ export async function unLikePost(req, res) {
       $inc: { likes: -1 },
     },
     { new: true }
-  ).populate({
-    path: "creator",
-    select: "username imageUrl fullname",
-  });
+  )
+    .populate({
+      path: "creator",
+      select: "username imageUrl fullname",
+    })
+    .populate({
+      path: "comments",
+      populate: { path: "user", select: "username imageUrl fullname" },
+    });
   await User.findByIdAndUpdate(userId, {
     $pull: { likedPosts: postId },
   });
@@ -76,10 +99,15 @@ export async function savePost(req, res) {
       $inc: { saves: 1 },
     },
     { new: true }
-  ).populate({
-    path: "creator",
-    select: "username imageUrl fullname",
-  });
+  )
+    .populate({
+      path: "creator",
+      select: "username imageUrl fullname",
+    })
+    .populate({
+      path: "comments",
+      populate: { path: "user", select: "username imageUrl fullname" },
+    });
   await User.findByIdAndUpdate(userId, {
     $push: { savedPosts: postId },
   });
@@ -94,12 +122,24 @@ export async function unSavePost(req, res) {
       $inc: { saves: -1 },
     },
     { new: true }
-  ).populate({
-    path: "creator",
-    select: "username imageUrl fullname",
-  });
-  await User.findByIdAndUpdate(userId, {
-    $pull: { savedPosts: postId },
-  });
+  )
+    .populate({
+      path: "creator",
+      select: "username imageUrl fullname",
+    })
+    .populate({
+      path: "comments",
+      populate: { path: "user", select: "username imageUrl fullname" },
+    });
+  await User.findByIdAndUpdate(
+    userId,
+    {
+      $pull: { savedPosts: postId },
+    },
+    {
+      path: "comments",
+      populate: { path: "user", select: "username imageUrl fullname" },
+    }
+  );
   res.json(post);
 }

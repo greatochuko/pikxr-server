@@ -6,7 +6,15 @@ const PostSchema = new mongoose.Schema(
     imageUrl: { type: String },
     creator: { type: mongoose.Schema.ObjectId, required: true, ref: "user" },
     likes: { type: Number, default: 0 },
-    comments: { type: Number, default: 0 },
+    comments: {
+      type: [
+        {
+          comment: { type: String },
+          user: { type: mongoose.Schema.ObjectId, ref: "user" },
+        },
+      ],
+      default: [],
+    },
     saves: { type: Number, default: 0 },
     shares: { type: Number, default: 0 },
   },

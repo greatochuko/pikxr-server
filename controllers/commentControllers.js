@@ -1,19 +1,15 @@
 import { Comment } from "../models/Comment.js";
-
-export async function getComments(req, res) {
-  const comments = await Comment.find({ postId: req.params.postId }).populate({
-    path: "user",
-    select: "username fullname imageUrl",
-  });
-  res.json(comments);
-}
+import { Post } from "../models/Post.js";
 
 export async function postComment(req, res) {
   const { comment, user, postId } = req.body;
-  await Comment.create({ comment, user, postId });
-  const comments = await Comment.find({ postId }).populate({
-    path: "user",
-    select: "username imageUrl fullname",
+  const updatedPost = await Post.findByIdAndUpdate(
+    postId,
+    { $push: { comments: { comment, user } } },
+    { new: true }
+  ).populate({
+    path: "comments",
+    populate: { path: "user", select: "username imageUrl fullname" },
   });
-  res.json(comments);
+  res.json(updatedPost);
 }
