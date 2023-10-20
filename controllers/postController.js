@@ -11,14 +11,25 @@ export async function getPosts(req, res) {
   res.json(posts);
 }
 
-export async function createPost(req, res) {
-  const newPost = await Post.create({
-    caption: req.body.caption,
-    creator: req.body.creator,
-    imageUrl: req.file.filename,
-  });
+export function createPost(req, res) {
+  const { caption, creator } = req.body;
+  const { image } = req.files;
+  const fileName = `${image.name.split(".")[0] + Date().now}.${
+    image.name.split(".")[1]
+  }`;
+  image.mv("public/posts/" + fileName, async (err) => {
+    if (err) {
+      res.json({ error: err.message });
+      return;
+    }
+    const newPost = await Post.create({
+      caption: req.body.caption,
+      creator: req.body.creator,
+      imageUrl: fileName,
+    });
 
-  res.json(newPost);
+    res.json(newPost);
+  });
 }
 
 export async function likePost(req, res) {

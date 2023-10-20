@@ -38,7 +38,7 @@ const postRouter = Router();
 
 postRouter.get("/posts/", getPosts);
 
-postRouter.post("/posts", upload.single("image"), createPost);
+postRouter.post("/posts", createPost);
 
 postRouter.post("/post/like", likePost);
 

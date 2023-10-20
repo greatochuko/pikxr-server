@@ -4,6 +4,6 @@ import { createStory, getStories } from "../controllers/storyController.js";
 const storyRouter = Router();
 
 storyRouter.get("/stories", getStories);
-storyRouter.post("/story/new", createStory);
+storyRouter.post("/stories", createStory);
 
 export default storyRouter;
