@@ -7,12 +7,18 @@ export async function login(req, res) {
   const user =
     (await User.findOne({ email })) || (await User.findOne({ username }));
   if (user) {
-    if (bcrypt.compare(password, user.password)) {
-      const token = generateJwt(user._id);
-      res.json({ token });
-    } else {
+    bcrypt.compare(password, user.password, (err, success) => {
+      if (success) {
+        const token = generateJwt(user._id);
+        res.json({ token });
+        return;
+      }
+      if (err) {
+        res.json({ error: err.message });
+        return;
+      }
       res.json({ error: "Username or Password incorrect" });
-    }
+    });
   } else {
     res.json({ error: "Username or Password incorrect" });
   }
