@@ -24,11 +24,11 @@ export async function getUserFollowers(req, res) {
   const user = await User.findOne({ username })
     .populate({
       path: "followers",
-      populate: { path: "user", select: "username imageUrl fullname" },
+      select: "username imageUrl fullname",
     })
     .populate({
       path: "following",
-      populate: { path: "user", select: "username imageUrl fullname" },
+      select: "username imageUrl fullname",
     });
   res.json(user);
 }
@@ -54,4 +54,34 @@ export async function searchUsers(req, res) {
     (u) => u.username.includes(q) || u.fullname.includes(q)
   );
   res.json(searchedUsers);
+}
+
+export async function followUser(req, res) {
+  const { userId, userToFollowId } = req.body;
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $push: { following: userToFollowId },
+    },
+    { new: true }
+  );
+  await User.findByIdAndUpdate(userToFollowId, {
+    $push: { followers: userId },
+  });
+  res.json(user);
+}
+
+export async function unFollowUser(req, res) {
+  const { userId, userToUnFollowId } = req.body;
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      $pull: { following: userToUnFollowId },
+    },
+    { new: true }
+  );
+  await User.findByIdAndUpdate(userToUnFollowId, {
+    $pull: { followers: userId },
+  });
+  res.json(user);
 }

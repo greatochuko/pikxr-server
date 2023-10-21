@@ -23,12 +23,14 @@ const UserSchema = new mongoose.Schema(
     },
     imageUrl: { type: String, default: "placeholderProfileImage.png" },
     followers: {
-      type: [{ user: { type: mongoose.Schema.ObjectId, ref: "user" } }],
+      type: [mongoose.SchemaTypes.ObjectId],
       default: [],
+      ref: "user",
     },
     following: {
-      type: [{ user: { type: mongoose.Schema.ObjectId, ref: "user" } }],
+      type: [mongoose.SchemaTypes.ObjectId],
       default: [],
+      ref: "user",
     },
     likedPosts: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
     savedPosts: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
