@@ -5,7 +5,7 @@ export async function getUser(req, res) {
     res.json({ error: "Invalid token" });
     return;
   }
-  const user = await User.findById(req.userId);
+  const user = await User.findById(req.userId).select("-password");
   res.json(user);
 }
 
