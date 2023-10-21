@@ -22,8 +22,14 @@ const UserSchema = new mongoose.Schema(
       minlength: [6, "Password must be greater than 6 characters"],
     },
     imageUrl: { type: String, default: "placeholderProfileImage.png" },
-    followers: { type: Number, default: 0 },
-    following: { type: Number, default: 0 },
+    followers: {
+      type: [{ user: { type: mongoose.Schema.ObjectId, ref: "user" } }],
+      default: [],
+    },
+    following: {
+      type: [{ user: { type: mongoose.Schema.ObjectId, ref: "user" } }],
+      default: [],
+    },
     likedPosts: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
     savedPosts: { type: [mongoose.SchemaTypes.ObjectId], default: [] },
     posts: { type: Number, default: 0 },

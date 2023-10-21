@@ -15,8 +15,16 @@ export async function getUserProfile(req, res) {
     res.json({ error: "Invalid token" });
     return;
   }
-  const user =
-    (await User.findOne({ username })) || (await User.findById(userId));
+  const user = await User.findOne({ username });
+  res.json(user);
+}
+
+export async function getUserFollowers(req, res) {
+  const { username } = req.params;
+  const user = await User.findOne({ username }).populate({
+    path: "followers",
+    populate: { path: "user", select: "username imageUrl fullname" },
+  });
   res.json(user);
 }
 

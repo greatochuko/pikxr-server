@@ -6,7 +6,6 @@ export function authenticate(req, res, next) {
     res.status(401).json({ error: "No token" });
     return;
   }
-  console.log(token);
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
