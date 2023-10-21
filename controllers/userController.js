@@ -21,10 +21,15 @@ export async function getUserProfile(req, res) {
 
 export async function getUserFollowers(req, res) {
   const { username } = req.params;
-  const user = await User.findOne({ username }).populate({
-    path: "followers",
-    populate: { path: "user", select: "username imageUrl fullname" },
-  });
+  const user = await User.findOne({ username })
+    .populate({
+      path: "followers",
+      populate: { path: "user", select: "username imageUrl fullname" },
+    })
+    .populate({
+      path: "following",
+      populate: { path: "user", select: "username imageUrl fullname" },
+    });
   res.json(user);
 }
 
