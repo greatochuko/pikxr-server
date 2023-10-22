@@ -26,12 +26,11 @@ export function createPost(req, res) {
       res.json({ error: err.message });
       return;
     }
-    const newPostCreated = await Post.create({
-      caption: req.body.caption,
-      creator: req.body.creator,
+    const newPost = await Post.create({
+      caption: caption,
+      creator: creator,
       imageUrl: fileName,
-    });
-    const newPost = await Post.findById(newPostCreated._id)
+    })
       .populate({
         path: "creator",
         select: "username imageUrl fullname",
@@ -40,6 +39,8 @@ export function createPost(req, res) {
         path: "comments",
         populate: { path: "user", select: "username imageUrl fullname" },
       });
+
+    User.findByIdAndUpdate(req.userId, { $push: { posts: newPost._id } });
 
     res.json(newPost);
   });

@@ -8,6 +8,7 @@ import {
   unSavePost,
 } from "../controllers/postController.js";
 import multer from "multer";
+import { authenticate } from "../middleware/authMiddleware.js";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -36,16 +37,16 @@ let upload = multer({ storage, fileFilter });
 
 const postRouter = Router();
 
-postRouter.get("/posts/", getPosts);
+postRouter.get("/posts/", authenticate, getPosts);
 
-postRouter.post("/posts", createPost);
+postRouter.post("/posts", authenticate, createPost);
 
-postRouter.post("/post/like", likePost);
+postRouter.post("/post/like", authenticate, likePost);
 
-postRouter.post("/post/unlike", unLikePost);
+postRouter.post("/post/unlike", authenticate, unLikePost);
 
-postRouter.post("/post/save", savePost);
+postRouter.post("/post/save", authenticate, savePost);
 
-postRouter.post("/post/unsave", unSavePost);
+postRouter.post("/post/unsave", authenticate, unSavePost);
 
 export default postRouter;

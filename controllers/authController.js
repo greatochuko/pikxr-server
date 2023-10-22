@@ -10,7 +10,7 @@ export async function login(req, res) {
     bcrypt.compare(password, user.password, (err, success) => {
       if (success) {
         const token = generateJwt(user._id);
-        res.json({ token });
+        res.json({ token, user });
         return;
       }
       if (err) {
@@ -39,6 +39,7 @@ export async function signup(req, res) {
     const token = generateJwt(user._id);
     res.status(201).json({
       token,
+      user,
     });
   } catch (err) {
     res.status(400).json(err.message);
