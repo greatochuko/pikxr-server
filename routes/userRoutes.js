@@ -6,6 +6,7 @@ import {
   getUserProfile,
   searchUsers,
   unFollowUser,
+  uploadCoverPhoto,
   validateEmail,
   validateUsername,
 } from "../controllers/userController.js";
@@ -21,5 +22,6 @@ userRouter.post("/user/unfollow", authenticate, unFollowUser);
 userRouter.post("/validateUsername", validateUsername);
 userRouter.post("/validateEmail", validateEmail);
 userRouter.get("/users/search", searchUsers);
+userRouter.post("/user/updatecoverphoto", authenticate, uploadCoverPhoto);
 
 export default userRouter;

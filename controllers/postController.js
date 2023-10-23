@@ -19,9 +19,8 @@ export async function getPosts(req, res) {
 export function createPost(req, res) {
   const { caption, creator } = req.body;
   const { image } = req.files;
-  const fileName = `${image.name.split(".")[0] + Date().now}.${
-    image.name.split(".")[1]
-  }`;
+  const fileName =
+    image.name.split(".")[0] + Date.now() + "." + image.name.split(".")[1];
   image.mv("public/posts/" + fileName, async (err) => {
     if (err) {
       res.json({ error: err.message });
