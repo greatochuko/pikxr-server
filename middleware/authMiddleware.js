@@ -10,7 +10,8 @@ export function authenticate(req, res, next) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
   } catch (error) {
-    req.userId = null;
+    res.status(401).json({ error: "Invalid token" });
+    return;
   }
   next();
 }

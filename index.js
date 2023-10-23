@@ -9,6 +9,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import commentRouter from "./routes/commentRoutes.js";
 import storyRouter from "./routes/storyRoutes.js";
+import notificationRouter from "./routes/notificationRoutes.js";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use(userRouter);
 app.use(postRouter);
 app.use(commentRouter);
 app.use(storyRouter);
+app.use(notificationRouter);
 
 mongoose.connect("mongodb://127.0.0.1:27017/pikxrDB").then(
   app.listen(PORT, () => {

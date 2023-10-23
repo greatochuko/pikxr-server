@@ -1,3 +1,4 @@
+import { Notification } from "../models/Notification.js";
 import { Post } from "../models/Post.js";
 import { User } from "../models/User.js";
 
@@ -30,15 +31,15 @@ export function createPost(req, res) {
       caption: caption,
       creator: creator,
       imageUrl: fileName,
-    })
-      .populate({
-        path: "creator",
-        select: "username imageUrl fullname",
-      })
-      .populate({
-        path: "comments",
-        populate: { path: "user", select: "username imageUrl fullname" },
-      });
+    });
+    newPost.populate({
+      path: "creator",
+      select: "username imageUrl fullname",
+    });
+    newPost.populate({
+      path: "comments",
+      populate: { path: "user", select: "username imageUrl fullname" },
+    });
 
     User.findByIdAndUpdate(req.userId, { $push: { posts: newPost._id } });
 
@@ -47,11 +48,11 @@ export function createPost(req, res) {
 }
 
 export async function likePost(req, res) {
-  const { postId, userId } = req.body;
+  const { postId, targetUserId } = req.body;
   const post = await Post.findByIdAndUpdate(
     postId,
     {
-      $inc: { likes: 1 },
+      $push: { likes: req.userId },
     },
     { new: true }
   )
@@ -63,18 +64,27 @@ export async function likePost(req, res) {
       path: "comments",
       populate: { path: "user", select: "username imageUrl fullname" },
     });
-  await User.findByIdAndUpdate(userId, {
+
+  // Update user list of saved posts
+  await User.findByIdAndUpdate(req.userId, {
     $push: { likedPosts: postId },
+  });
+
+  // Create notification for action
+  await Notification.create({
+    targetUser: targetUserId,
+    message: "liked your post",
+    user: req.userId,
   });
   res.json(post);
 }
 
 export async function unLikePost(req, res) {
-  const { postId, userId } = req.body;
+  const { postId, targetUserId } = req.body;
   const post = await Post.findByIdAndUpdate(
     postId,
     {
-      $inc: { likes: -1 },
+      $pull: { likes: req.userId },
     },
     { new: true }
   )
@@ -86,18 +96,28 @@ export async function unLikePost(req, res) {
       path: "comments",
       populate: { path: "user", select: "username imageUrl fullname" },
     });
-  await User.findByIdAndUpdate(userId, {
+
+  // Update user list of saved posts
+  await User.findByIdAndUpdate(req.userId, {
     $pull: { likedPosts: postId },
+  });
+
+  // Create notification for action
+  await Notification.create({
+    targetUser: targetUserId,
+    message: "unliked your post",
+    user: req.userId,
   });
   res.json(post);
 }
 
+// Controllers for saving posts
 export async function savePost(req, res) {
-  const { postId, userId } = req.body;
+  const { postId } = req.body;
   const post = await Post.findByIdAndUpdate(
     postId,
     {
-      $inc: { saves: 1 },
+      $push: { saves: req.userId },
     },
     { new: true }
   )
@@ -109,18 +129,21 @@ export async function savePost(req, res) {
       path: "comments",
       populate: { path: "user", select: "username imageUrl fullname" },
     });
-  await User.findByIdAndUpdate(userId, {
+
+  // Update user list of saved posts
+  await User.findByIdAndUpdate(req.userId, {
     $push: { savedPosts: postId },
   });
+
   res.json(post);
 }
 
 export async function unSavePost(req, res) {
-  const { postId, userId } = req.body;
+  const { postId } = req.body;
   const post = await Post.findByIdAndUpdate(
     postId,
     {
-      $inc: { saves: -1 },
+      $pull: { saves: req.userId },
     },
     { new: true }
   )
@@ -132,15 +155,8 @@ export async function unSavePost(req, res) {
       path: "comments",
       populate: { path: "user", select: "username imageUrl fullname" },
     });
-  await User.findByIdAndUpdate(
-    userId,
-    {
-      $pull: { savedPosts: postId },
-    },
-    {
-      path: "comments",
-      populate: { path: "user", select: "username imageUrl fullname" },
-    }
-  );
+  await User.findByIdAndUpdate(req.userId, {
+    $pull: { savedPosts: postId },
+  });
   res.json(post);
 }
