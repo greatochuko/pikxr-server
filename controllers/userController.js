@@ -99,3 +99,21 @@ export async function uploadCoverPhoto(req, res) {
     res.json("done");
   });
 }
+
+export async function uploadProfilePhoto(req, res) {
+  const { fileName } = req.body;
+  const imageFileName =
+    fileName.split(".")[0] + Date.now() + "." + fileName.split(".")[1];
+  const { coverPhoto } = req.files;
+  coverPhoto.mv("public/users/" + imageFileName, async (err) => {
+    if (err) {
+      res.json({ error: err.message });
+    }
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      { imageUrl: imageFileName },
+      { new: true }
+    );
+    res.json(user);
+  });
+}

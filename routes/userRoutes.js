@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import {
   followUser,
   getUser,
@@ -7,6 +8,7 @@ import {
   searchUsers,
   unFollowUser,
   uploadCoverPhoto,
+  uploadProfilePhoto,
   validateEmail,
   validateUsername,
 } from "../controllers/userController.js";
@@ -23,5 +25,6 @@ userRouter.post("/validateUsername", validateUsername);
 userRouter.post("/validateEmail", validateEmail);
 userRouter.get("/users/search", searchUsers);
 userRouter.post("/user/updatecoverphoto", authenticate, uploadCoverPhoto);
+userRouter.post("/user/updateprofilephoto", authenticate, uploadProfilePhoto);
 
 export default userRouter;
