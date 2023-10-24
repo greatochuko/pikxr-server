@@ -12,8 +12,7 @@ export async function getPosts(req, res) {
     .populate({
       path: "comments",
       populate: { path: "user", select: "username imageUrl fullname" },
-    })
-    .sort({ createdAt: -1 });
+    });
   res.json(posts);
 }
 
