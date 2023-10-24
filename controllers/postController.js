@@ -1,6 +1,7 @@
 import { Notification } from "../models/Notification.js";
 import { Post } from "../models/Post.js";
 import { User } from "../models/User.js";
+import deleteFile from "../utils/deleteFile.js";
 
 export async function getPosts(req, res) {
   const posts = await Post.find()
@@ -17,8 +18,9 @@ export async function getPosts(req, res) {
 }
 
 export function createPost(req, res) {
-  const { caption, creator } = req.body;
+  const { caption } = req.body;
   const { image } = req.files;
+  if (!image) res.json({ error: "Please select an image" });
   const fileName =
     image.name.split(".")[0] + Date.now() + "." + image.name.split(".")[1];
   image.mv("public/posts/" + fileName, async (err) => {
@@ -26,23 +28,27 @@ export function createPost(req, res) {
       res.json({ error: err.message });
       return;
     }
-    const newPost = await Post.create({
-      caption: caption,
-      creator: creator,
-      imageUrl: fileName,
-    });
-    newPost.populate({
-      path: "creator",
-      select: "username imageUrl fullname",
-    });
-    newPost.populate({
-      path: "comments",
-      populate: { path: "user", select: "username imageUrl fullname" },
-    });
+    try {
+      const newPost = await Post.create({
+        caption,
+        creator: req.userId,
+        imageUrl: fileName,
+      });
+      newPost.populate({
+        path: "creator",
+        select: "username imageUrl fullname",
+      });
+      newPost.populate({
+        path: "comments",
+        populate: { path: "user", select: "username imageUrl fullname" },
+      });
 
-    User.findByIdAndUpdate(req.userId, { $push: { posts: newPost._id } });
+      User.findByIdAndUpdate(req.userId, { $push: { posts: newPost._id } });
 
-    res.json(newPost);
+      res.json(newPost);
+    } catch (err) {
+      res.json({ error: err.message });
+    }
   });
 }
 
@@ -158,4 +164,36 @@ export async function unSavePost(req, res) {
     $pull: { savedPosts: postId },
   });
   res.json(post);
+}
+
+export async function updatePost(req, res) {
+  if (req.files) {
+    const { image } = req.files;
+    const fileName =
+      image.name.split(".")[0] + Date.now() + "." + image.name.split(".")[1];
+    req.body.imageUrl = fileName;
+    image.mv("public/posts/" + fileName, (err) => {
+      if (err) {
+        res.json({ error: err.message });
+        return;
+      }
+    });
+  }
+
+  const oldPost = await Post.findById(req.params.postId);
+  deleteFile("./public/posts/" + oldPost.imageUrl);
+  const post = await Post.findByIdAndUpdate(req.params.postId, req.body, {
+    new: true,
+  });
+  res.json(post);
+}
+
+export async function deletePost(req, res) {
+  try {
+    const post = await Post.findByIdAndDelete(req.params.postId);
+    deleteFile("./public/posts/" + post.imageUrl);
+    res.json(post);
+  } catch (err) {
+    res.json({ error: err.message });
+  }
 }
