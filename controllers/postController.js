@@ -19,6 +19,7 @@ export async function getPosts(req, res) {
 
 export function createPost(req, res) {
   const { caption } = req.body;
+  if (!req.files) return res.json({ error: "Please select an image" });
   const { image } = req.files;
   if (!image) res.json({ error: "Please select an image" });
   const fileName =
@@ -167,6 +168,7 @@ export async function unSavePost(req, res) {
 }
 
 export async function updatePost(req, res) {
+  const oldPost = await Post.findById(req.params.postId);
   if (req.files) {
     const { image } = req.files;
     const fileName =
@@ -177,14 +179,21 @@ export async function updatePost(req, res) {
         res.json({ error: err.message });
         return;
       }
+      deleteFile("./public/posts/" + oldPost.imageUrl);
     });
   }
 
-  const oldPost = await Post.findById(req.params.postId);
-  deleteFile("./public/posts/" + oldPost.imageUrl);
   const post = await Post.findByIdAndUpdate(req.params.postId, req.body, {
     new: true,
-  });
+  })
+    .populate({
+      path: "creator",
+      select: "username imageUrl fullname",
+    })
+    .populate({
+      path: "comments",
+      populate: { path: "user", select: "username imageUrl fullname" },
+    });
   res.json(post);
 }
 

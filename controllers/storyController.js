@@ -28,3 +28,13 @@ export async function createStory(req, res) {
     }
   });
 }
+
+export async function deleteStory(req, res) {
+  const { storyId } = req.params;
+  try {
+    const story = await Story.findByIdAndDelete(storyId);
+    res.json(story);
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+}
