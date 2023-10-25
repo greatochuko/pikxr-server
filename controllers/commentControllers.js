@@ -36,8 +36,8 @@ export async function postComment(req, res) {
   res.json(updatedPost);
 }
 
-export async function deleteComment(commentId) {
-  const comment = await Comment.findByIdAndDelete(commentId);
+export async function deleteComment(req, res) {
+  const comment = await Comment.findByIdAndDelete(req.params.commentId);
   await Post.findByIdAndUpdate(comment.postId, {
     $pull: { comments: comment._id },
   });
