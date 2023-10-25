@@ -42,7 +42,7 @@ export async function signup(req, res) {
       user,
     });
   } catch (err) {
-    res.status(400).json(err.message);
+    res.status(400).json({ error: err.message });
   }
 }
 

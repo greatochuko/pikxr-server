@@ -16,6 +16,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const MONGODB_ATLAS_URI =
+  "mongodb+srv://greatochuko123:Great%4014122003@pikxr.hr7tlwe.mongodb.net/pikxrDB";
+
+const MONGODB_URI = "mongodb://127.0.0.1:27017/pikxrDB";
+
 var whitelist = ["http://localhost:5173"];
 var corsOptions = {
   origin: function (origin, callback) {
@@ -38,7 +43,7 @@ app.use(commentRouter);
 app.use(storyRouter);
 app.use(notificationRouter);
 
-mongoose.connect("mongodb://127.0.0.1:27017/pikxrDB").then(
+mongoose.connect(MONGODB_ATLAS_URI).then(
   app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`);
   })
