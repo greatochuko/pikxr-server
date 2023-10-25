@@ -16,9 +16,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const MONGODB_ATLAS_URI =
-  "mongodb+srv://greatochuko123:Great%4014122003@pikxr.hr7tlwe.mongodb.net/pikxrDB?retryWrites=true&w=majority";
-
 const MONGODB_URI = "mongodb://127.0.0.1:27017/pikxrDB";
 
 var whitelist = [
@@ -47,7 +44,7 @@ app.use(commentRouter);
 app.use(storyRouter);
 app.use(notificationRouter);
 
-mongoose.connect(MONGODB_URI).then(
+mongoose.connect(process.env.MONGODB_URI).then(
   app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`);
   })
