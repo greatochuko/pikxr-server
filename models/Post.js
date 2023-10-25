@@ -6,13 +6,9 @@ const PostSchema = new mongoose.Schema(
     imageUrl: { type: String },
     creator: { type: mongoose.Schema.ObjectId, required: true, ref: "user" },
     comments: {
-      type: [
-        {
-          comment: { type: String },
-          user: { type: mongoose.Schema.ObjectId, ref: "user" },
-        },
-      ],
+      type: [mongoose.SchemaTypes.ObjectId],
       default: [],
+      ref: "comment",
     },
     likes: { type: [mongoose.SchemaTypes.ObjectId], default: [], ref: "user" },
     saves: { type: [mongoose.SchemaTypes.ObjectId], default: [], ref: "user" },

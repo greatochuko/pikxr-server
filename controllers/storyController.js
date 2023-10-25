@@ -1,4 +1,5 @@
 import { Story } from "../models/Story.js";
+import deleteFile from "../utils/deleteFile.js";
 
 export async function getStories(req, res) {
   const stories = await Story.find().populate({
@@ -33,6 +34,7 @@ export async function deleteStory(req, res) {
   const { storyId } = req.params;
   try {
     const story = await Story.findByIdAndDelete(storyId);
+    deleteFile("./public/stories/" + story.imageUrl);
     res.json(story);
   } catch (err) {
     res.json({ error: err.message });

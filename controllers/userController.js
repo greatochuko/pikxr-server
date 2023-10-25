@@ -117,3 +117,15 @@ export async function uploadProfilePhoto(req, res) {
     res.json(user);
   });
 }
+
+export async function editUserAbout(req, res) {
+  const { about, userId } = req.body;
+  if (userId !== req.userId)
+    return res.status(403).json({ error: "Forbidden" });
+  const updatedUser = await User.findByIdAndUpdate(
+    req.userId,
+    { about },
+    { new: true }
+  );
+  res.json(updatedUser);
+}

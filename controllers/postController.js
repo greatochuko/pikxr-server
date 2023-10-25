@@ -4,15 +4,10 @@ import { User } from "../models/User.js";
 import deleteFile from "../utils/deleteFile.js";
 
 export async function getPosts(req, res) {
-  const posts = await Post.find()
-    .populate({
-      path: "creator",
-      select: "username imageUrl fullname",
-    })
-    .populate({
-      path: "comments",
-      populate: { path: "user", select: "username imageUrl fullname" },
-    });
+  const posts = await Post.find().populate({
+    path: "creator",
+    select: "username imageUrl fullname",
+  });
   res.json(posts);
 }
 
