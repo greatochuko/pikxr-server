@@ -21,7 +21,7 @@ const MONGODB_URI = "mongodb://127.0.0.1:27017/pikxrDB";
 var whitelist = ["http://127.0.0.1:5173", "https://pikxr.onrender.com"];
 var corsOptions = {
   origin: function (origin, callback) {
-    if (whitelist.includes(origin)) {
+    if (whitelist.includes(origin) || origin === undefined) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
