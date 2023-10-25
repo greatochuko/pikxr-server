@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 
 export async function login(req, res) {
   const { email, username, password } = req.body;
+  console.log(req.body);
   const user =
     (await User.findOne({ email })) || (await User.findOne({ username }));
   if (user) {
