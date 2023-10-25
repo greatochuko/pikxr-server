@@ -21,7 +21,7 @@ const MONGODB_ATLAS_URI =
 
 const MONGODB_URI = "mongodb://127.0.0.1:27017/pikxrDB";
 
-var whitelist = ["http://localhost:5173"];
+var whitelist = ["http://localhost:5173", "http://192.168.0.100:5173"];
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.includes(origin) || origin === undefined) {
