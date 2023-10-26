@@ -24,7 +24,6 @@ if (process.env.ENVIRONMENT === "development") {
 var whitelist = ["http://localhost:5173", "https://pikxr.onrender.com"];
 var corsOptions = {
   origin: function (origin, callback) {
-    console.log(origin);
     if (whitelist.includes(origin) || origin === undefined) {
       callback(null, true);
     } else {
