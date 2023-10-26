@@ -21,9 +21,10 @@ if (process.env.ENVIRONMENT === "development") {
   MONGODB_URI = "mongodb://127.0.0.1:27017/pikxrDB";
 }
 
-var whitelist = ["http://localhost:5173", "https://pikxr.onrender.com/"];
+var whitelist = ["http://localhost:5173", "https://pikxr.onrender.com"];
 var corsOptions = {
   origin: function (origin, callback) {
+    console.log(origin);
     if (whitelist.includes(origin) || origin === undefined) {
       callback(null, true);
     } else {
