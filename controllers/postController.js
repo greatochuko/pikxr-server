@@ -16,6 +16,7 @@ export async function getPosts(req, res) {
 }
 
 export function createPost(req, res) {
+  console.log("CREATING POST ....");
   const { caption } = req.body;
   if (!req.files) return res.json({ error: "Please select an image" });
   const { image } = req.files;
