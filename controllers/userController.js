@@ -1,4 +1,5 @@
 import { User } from "../models/User.js";
+import { uploadPhoto } from "../utils/uploadPhoto.js";
 
 export async function getUser(req, res) {
   try {
@@ -112,43 +113,31 @@ export async function unFollowUser(req, res) {
 
 export async function uploadCoverPhoto(req, res) {
   if (!req.files) return res.json({ error: "please select a file" });
-  const { fileName } = req.body;
-  const imageFileName =
-    fileName.split(".")[0] + Date.now() + "." + fileName.split(".")[1];
   const { coverPhoto } = req.files;
+  const { url } = await uploadPhoto(coverPhoto);
   try {
-    coverPhoto.mv("public/users/" + imageFileName, async (err) => {
-      if (err) {
-        res.json({ error: err.message });
-      }
-      await User.findByIdAndUpdate(req.userId, {
-        coverPhotoUrl: imageFileName,
-      });
-      res.json("done");
+    await User.findByIdAndUpdate(req.userId, {
+      coverPhotoUrl: url,
     });
+    res.json("done");
   } catch (err) {
     res.json({ error: err.message });
   }
 }
 
 export async function uploadProfilePhoto(req, res) {
-  if (!req.files) return res.json({ error: "Please select a file" });
-  const { fileName } = req.body;
-  const imageFileName =
-    fileName.split(".")[0] + Date.now() + "." + fileName.split(".")[1];
-  const { coverPhoto } = req.files;
+  if (!req.files) return res.json({ error: "please select a file" });
+  const { profilePhoto } = req.files;
+  const { url } = await uploadPhoto(profilePhoto);
   try {
-    coverPhoto.mv("public/users/" + imageFileName, async (err) => {
-      if (err) {
-        res.json({ error: err.message });
-      }
-      const user = await User.findByIdAndUpdate(
-        req.userId,
-        { imageUrl: imageFileName },
-        { new: true }
-      );
-      res.json(user);
-    });
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      {
+        imageUrl: url,
+      },
+      { new: true }
+    );
+    res.json(user);
   } catch (err) {
     res.json({ error: err.message });
   }

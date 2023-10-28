@@ -22,7 +22,10 @@ const UserSchema = new mongoose.Schema(
       minlength: [6, "Password must be greater than 6 characters"],
     },
     imageUrl: { type: String, default: "placeholderProfileImage.png" },
-    coverPhotoUrl: { type: String, default: "placeholder-cover-photo.jpg" },
+    coverPhotoUrl: {
+      type: String,
+      default: "https://cdn.filestackcontent.com/l7Szk41cRQesTagBXKH2",
+    },
     followers: {
       type: [mongoose.SchemaTypes.ObjectId],
       default: [],
