@@ -49,5 +49,5 @@ export async function signup(req, res) {
 //Generate JWT
 
 function generateJwt(id) {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "5s" });
 }
