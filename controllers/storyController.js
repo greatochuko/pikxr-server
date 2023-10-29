@@ -1,5 +1,6 @@
 import { Story } from "../models/Story.js";
 import deleteFile from "../utils/deleteFile.js";
+import { uploadPhoto } from "../utils/uploadPhoto.js";
 
 export async function getStories(req, res) {
   try {
@@ -14,25 +15,20 @@ export async function getStories(req, res) {
 }
 
 export async function createStory(req, res) {
+  const { storyImage } = req.files;
+  if (storyImage) {
+    const { url } = await uploadPhoto(storyImage);
+    req.body.imageUrl = url;
+  }
+  const { caption, creator, imageUrl } = req.body;
   try {
-    const { caption, creator } = req.body;
-    const { storyImage } = req.files;
-    const fileName = `${storyImage.name.split(".")[0]}${Date.now()}.${
-      storyImage.name.split(".")[1]
-    }`;
-    storyImage.mv("public/stories/" + fileName, async (err) => {
-      if (err) {
-        console.log("Error", err);
-      } else {
-        const newStory = await Story.create({
-          caption: caption,
-          creator: creator,
-          imageUrl: fileName,
-        });
-
-        res.json(newStory);
-      }
+    const newStory = await Story.create({
+      caption,
+      creator,
+      imageUrl,
     });
+
+    res.json(newStory);
   } catch (err) {
     res.json({ error: err.message });
   }
