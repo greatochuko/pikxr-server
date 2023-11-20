@@ -16,6 +16,18 @@ export async function getPosts(req, res) {
   }
 }
 
+export async function getPost(req, res) {
+  try {
+    const post = await Post.findById(req.params.postId).populate({
+      path: "creator",
+      select: "username imageUrl fullname",
+    });
+    res.json(post);
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+}
+
 export async function createPost(req, res) {
   const { caption } = req.body;
   if (!req.files) return res.json({ error: "Please select an image" });

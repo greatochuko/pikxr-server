@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getPost,
   createPost,
   getPosts,
   likePost,
@@ -10,11 +11,12 @@ import {
   deletePost,
 } from "../controllers/postController.js";
 import { authenticate } from "../middleware/authMiddleware.js";
-import { Post } from "../models/Post.js";
 
 const postRouter = Router();
 
-postRouter.get("/posts/", authenticate, getPosts);
+postRouter.get("/posts", authenticate, getPosts);
+
+postRouter.get("/posts/:postId", authenticate, getPost);
 
 postRouter.post("/posts", authenticate, createPost);
 
