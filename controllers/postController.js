@@ -18,10 +18,19 @@ export async function getPosts(req, res) {
 
 export async function getPost(req, res) {
   try {
-    const post = await Post.findById(req.params.postId).populate({
-      path: "creator",
-      select: "username imageUrl fullname",
-    });
+    const post = await Post.findById(req.params.postId)
+      .populate({
+        path: "creator",
+        select: "username imageUrl fullname",
+      })
+      .populate({
+        path: "comments",
+        select: "comment postId user createdAt",
+        populate: {
+          path: "user",
+          select: "username fullname imageUrl",
+        },
+      });
     res.json(post);
   } catch (err) {
     res.json({ error: err.message });
