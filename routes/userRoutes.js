@@ -6,6 +6,7 @@ import {
   getUser,
   getUserFollowers,
   getUserProfile,
+  getUsers,
   searchUsers,
   unFollowUser,
   uploadCoverPhoto,
@@ -18,6 +19,7 @@ import { authenticate } from "../middleware/authMiddleware.js";
 const userRouter = Router();
 
 userRouter.get("/user", authenticate, getUser);
+userRouter.get("/user/all", authenticate, getUsers);
 userRouter.get("/user/:username", authenticate, getUserProfile);
 userRouter.patch("/user/:userId", authenticate, editUserAbout);
 userRouter.get("/user/followers/:username", getUserFollowers);

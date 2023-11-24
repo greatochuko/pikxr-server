@@ -10,6 +10,15 @@ export async function getUser(req, res) {
   }
 }
 
+export async function getUsers(req, res) {
+  try {
+    const users = await User.find().select("-password");
+    res.json(users);
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+}
+
 export async function getUserProfile(req, res) {
   const { username } = req.params;
   try {
@@ -65,7 +74,9 @@ export async function searchUsers(req, res) {
       "username fullname imageUrl followers"
     );
     const searchedUsers = users.filter(
-      (u) => u.username.includes(q) || u.fullname.includes(q)
+      (u) =>
+        u.username.toLowerCase().includes(q.toLowerCase()) ||
+        u.fullname.toLowerCase().includes(q.toLowerCase())
     );
     res.json(searchedUsers);
   } catch (err) {
@@ -74,17 +85,17 @@ export async function searchUsers(req, res) {
 }
 
 export async function followUser(req, res) {
-  const { userId, userToFollowId } = req.body;
+  const { userToFollowId } = req.body;
   try {
     const user = await User.findByIdAndUpdate(
-      userId,
+      req.userId,
       {
         $push: { following: userToFollowId },
       },
       { new: true }
     );
     await User.findByIdAndUpdate(userToFollowId, {
-      $push: { followers: userId },
+      $push: { followers: req.userId },
     });
     res.json(user);
   } catch (err) {
@@ -93,17 +104,17 @@ export async function followUser(req, res) {
 }
 
 export async function unFollowUser(req, res) {
-  const { userId, userToUnFollowId } = req.body;
+  const { userToUnFollowId } = req.body;
   try {
     const user = await User.findByIdAndUpdate(
-      userId,
+      req.userId,
       {
         $pull: { following: userToUnFollowId },
       },
       { new: true }
     );
     await User.findByIdAndUpdate(userToUnFollowId, {
-      $pull: { followers: userId },
+      $pull: { followers: req.userId },
     });
     res.json(user);
   } catch (err) {
