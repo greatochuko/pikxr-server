@@ -48,8 +48,8 @@ export async function postComment(req, res) {
 }
 
 export async function deleteComment(req, res) {
-  const comment = await Comment.findByIdAndDelete(req.params.commentId);
   try {
+    const comment = await Comment.findByIdAndDelete(req.params.commentId);
     await Post.findByIdAndUpdate(comment.postId, {
       $pull: { comments: comment._id },
     });
