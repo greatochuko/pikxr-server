@@ -15,7 +15,6 @@ export async function uploadPhoto(file) {
     const data = await response.json();
     return data;
   } catch (err) {
-    console.log(err.message);
     return { error: err.message };
   }
 }
